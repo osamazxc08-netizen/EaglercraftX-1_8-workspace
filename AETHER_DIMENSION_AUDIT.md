@@ -27,7 +27,7 @@ Audited against the current deobfuscated EaglercraftX 1.8 source.
 
 ## Current status
 
-Native Aether dimension, generator, and portal foundations are implemented on `aether-integration`. Selected outer islands now also receive deterministic stone ruin markers with glowstone caps. This remains an incomplete gameplay implementation: runtime travel, rendering, and saving have not been browser-tested.
+Native Aether dimension, generator, and portal foundations are implemented on `aether-integration`. Selected outer islands now also receive deterministic stone-brick ruin markers with glowstone caps and a central Aether Crystal. The crystal is a registered, light-emitting block with a quartz-based vanilla texture and a crafting recipe using four quartz. This remains an incomplete gameplay implementation: runtime travel, rendering, and saving have not been browser-tested.
 
 ## Additional transfer-path finding
 
@@ -42,7 +42,9 @@ The following native source changes are now present on `aether-integration`:
 
 - Dimension ID 2 is registered through `WorldProviderAether`.
 - Server world arrays and dimension lookup include a fourth world slot for Aether while preserving the vanilla slot mapping for Overworld, Nether, and End.
-- `ChunkProviderAether` generates deterministic floating islands around a central spawn island, with sky biome data. Selected outer islands now include small deterministic stone-brick ruin structures with glowstone caps; the central spawn island is kept clear.
+- `ChunkProviderAether` generates deterministic floating islands around a central spawn island, with sky biome data. Selected outer islands now include small deterministic stone-brick ruin structures with glowstone caps and a central Aether Crystal; the central spawn island is kept clear.
+- Added registered `aether_crystal` block ID 199, with light emission and a vanilla quartz texture to avoid requiring external assets.
+- Added a shaped recipe for Aether Crystal using four quartz.
 - A dedicated `aether_portal` block is registered separately from the vanilla Nether portal.
 - A glowstone frame (4 blocks wide by 5 high, with a 2 by 3 opening) activates when water is placed in the opening. The interior becomes Aether portal blocks.
 - Entity portal handling routes Aether portal collisions between dimension 0 and dimension 2.
@@ -51,7 +53,7 @@ The following native source changes are now present on `aether-integration`:
 
 ### Build verification
 
-- A fresh GitHub Actions build was triggered for the ruins update (commit `fe6e1e416f067408cdf120a0ffd33f277220e904`); its result is pending.
+- GitHub Actions builds were triggered for the ruins and Aether Crystal updates. The latest full build is run `44774399995` for commit `eb8f48f2b869641c84a2175f831a23562fa661aa`; its result is pending.
 - Previous verified build: GitHub Actions run 22: `44766437918`
 - Result: `completed / success`
 - Task: `:target_teavm_javascript:makeMainOfflineDownload`

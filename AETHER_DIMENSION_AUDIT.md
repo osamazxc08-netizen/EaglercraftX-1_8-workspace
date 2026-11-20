@@ -34,3 +34,33 @@ This commit is an audit/documentation checkpoint only. It does not add a playabl
 - `ServerConfigurationManager.transferEntityToWorld` contains vanilla coordinate scaling rules for Nether/Overworld and otherwise uses the destination provider's spawn coordinate. For destinations other than End (dimension 1), it then calls `parWorldServer2.getDefaultTeleporter().placeInPortal(...)`. Aether must therefore supply a safe provider spawn coordinate and a dedicated teleporter strategy (or a carefully isolated transfer override) so the generic Nether teleporter cannot create/search vanilla Nether portals in the Aether world.
 - The transfer routine's coordinate scaling is dimension-specific and only models dimension -1 versus dimension 0. Aether travel should preserve or deliberately map coordinates rather than accidentally inheriting the Nether's 8:1 scaling behavior.
 - The current code's fallback branch treats any non-1 destination similarly for spawn selection, so dimension 2 cannot be considered complete merely by adding it to `worldServerForDimension`.
+
+
+## Implementation checkpoint — 2026-11-20
+
+The following native source changes are now present on `aether-integration`:
+
+- Dimension ID 2 is registered through `WorldProviderAether`.
+- Server world arrays and dimension lookup include a fourth world slot for Aether while preserving the vanilla slot mapping for Overworld, Nether, and End.
+- `ChunkProviderAether` generates deterministic floating islands around a central spawn island, with sky biome data.
+- A dedicated `aether_portal` block is registered separately from the vanilla Nether portal.
+- A glowstone frame (4 blocks wide by 5 high, with a 2 by 3 opening) activates when water is placed in the opening. The interior becomes Aether portal blocks.
+- Entity portal handling routes Aether portal collisions between dimension 0 and dimension 2.
+- Aether transfers use the destination spawn and deliberately bypass the vanilla Nether teleporter and its 8:1 coordinate scaling.
+- The Aether provider uses the sky biome, a pale-blue fog, a low cloud height, a unique `_aether` storage suffix, and an Aether-specific spawn coordinate.
+
+### Build verification
+
+- GitHub Actions run 22: `44766437918`
+- Result: `completed / success`
+- Task: `:target_teavm_javascript:makeMainOfflineDownload`
+- Artifact: `EaglercraftX-1.8-Offline`, ID `14646545726`, 37,283,077 bytes.
+- The downloaded ZIP passed archive integrity inspection; `classes.js` contains the Aether provider, generator, and portal identifiers.
+
+### Remaining work / not yet verified
+
+- No browser gameplay smoke test has been performed. A successful Gradle/TeaVM build proves compilation and packaging, not that portal activation, chunk generation, rendering, travel, and saving all behave correctly at runtime.
+- The implementation is a native Aether foundation, not a full port of the original Aether mod.
+- Still missing: Aether-specific blocks/items and recipes, structures/dungeons, creatures, sound set, dedicated blue portal texture/particles, and fuller Aether sky presentation.
+- To return from Aether with the current implementation, build another glowstone-and-water portal in the Aether dimension.
+- Keep PR #1 as Draft until those runtime checks and remaining content are complete.

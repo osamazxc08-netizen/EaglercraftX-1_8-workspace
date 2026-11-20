@@ -57,13 +57,15 @@ public class ChunkProviderAether implements IChunkProvider {
 	}
 
 	private IslandData[] prepareIslands(int chunkX, int chunkZ) {
-		int minCellX = Math.floorDiv(chunkX * CHUNK_SIZE, ISLAND_SPACING) - 1;
-		int minCellZ = Math.floorDiv(chunkZ * CHUNK_SIZE, ISLAND_SPACING) - 1;
-		IslandData[] islands = new IslandData[9];
+		int minCellX = Math.floorDiv(chunkX * CHUNK_SIZE, ISLAND_SPACING);
+		int minCellZ = Math.floorDiv(chunkZ * CHUNK_SIZE, ISLAND_SPACING);
+		int maxCellX = Math.floorDiv(chunkX * CHUNK_SIZE + CHUNK_SIZE - 1, ISLAND_SPACING);
+		int maxCellZ = Math.floorDiv(chunkZ * CHUNK_SIZE + CHUNK_SIZE - 1, ISLAND_SPACING);
+		IslandData[] islands = new IslandData[(maxCellX - minCellX + 3) * (maxCellZ - minCellZ + 3)];
 		int index = 0;
 		long seed = this.world.getSeed();
-		for (int cx = minCellX; cx <= minCellX + 2; ++cx) {
-			for (int cz = minCellZ; cz <= minCellZ + 2; ++cz) {
+		for (int cx = minCellX - 1; cx <= maxCellX + 1; ++cx) {
+			for (int cz = minCellZ - 1; cz <= maxCellZ + 1; ++cz) {
 				int h = hash(cx, cz, seed);
 				boolean central = cx == 0 && cz == 0;
 				int centerX = cx * ISLAND_SPACING + (central ? 0 : (h % 57) - 28);

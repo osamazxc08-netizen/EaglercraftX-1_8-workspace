@@ -53,10 +53,10 @@ The following native source changes are now present on `aether-integration`:
 
 ### Build verification
 
-- Latest offline JavaScript build: GitHub Actions run `44784579193`, commit `c44d879c2d5530c6240f19b815fa3f1f2eba6faf`, result `completed / success`. It includes the Aether Crystal inventory registration and the fix preventing Endermen from spawning in Aether.
+- Latest offline JavaScript build: GitHub Actions run `44785371957`, commit `44ee0d9a15b0e069c7f0936ac55b52d6c90604ef`, result `completed / success`. It includes the Aether Crystal inventory registration and the fix preventing Endermen from spawning in Aether. Resource repacking was explicitly re-triggered so the custom blockstate/model/item model and English localization are present inside the offline EPK.
 - Previous verified build: GitHub Actions run `44774687307` completed successfully with artifact ID `14648562483`.
 - GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; result: `completed / success`.
-- Latest artifact: `EaglercraftX-1.8-Offline`, artifact ID `14653024086`, 37,238,639 bytes. Downloaded ZIP passed integrity inspection (87 entries); `classes.js` contains the Aether provider, generator, portal, and crystal identifiers. The crystal block is now registered as an inventory ItemBlock.
+- Latest artifact: `EaglercraftX-1.8-Offline`, artifact ID `14653791967`, 37,260,230 bytes. Downloaded ZIP passed integrity inspection (87 entries); the embedded `assets.epk` contains the Aether Crystal blockstate, block model, item model, and English localization. `classes.js` contains the Aether provider, generator, portal, and crystal identifiers and passed a JavaScript syntax check. The crystal block is registered as an inventory ItemBlock.
 - Previous verified build: GitHub Actions run 22: `44766437918`
 - Result: `completed / success`
 - Task: `:target_teavm_javascript:makeMainOfflineDownload`

@@ -87,19 +87,26 @@ public class ChunkProviderAether implements IChunkProvider {
 		if ((bestHash % 4) == 0 && (bestCenterX != 0 || bestCenterZ != 0)) {
 			int dx = worldX - bestCenterX;
 			int dz = worldZ - bestCenterZ;
-			boolean corner = (Math.abs(dx) == 3 && Math.abs(dz) == 3);
-			if (dx == 0 && dz == 0) {
-				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.aether_crystal.getDefaultState());
+			int ax = Math.abs(dx);
+			int az = Math.abs(dz);
+			boolean corner = (ax == 3 && az == 3);
+
+			// A compact 5x5 altar platform, with a crystal on a raised center tile.
+			if (ax <= 2 && az <= 2) {
+				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
 			}
+			if (dx == 0 && dz == 0) {
+				primer.setBlockState(localX, islandTop + 2, localZ, Blocks.aether_crystal.getDefaultState());
+			}
+
+			// Four short corner pillars and four open cardinal entrances.
 			if (corner) {
 				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
 				primer.setBlockState(localX, islandTop + 2, localZ, Blocks.stonebrick.getDefaultState());
 				primer.setBlockState(localX, islandTop + 3, localZ, Blocks.glowstone.getDefaultState());
 			}
-			if ((dx == 0 && Math.abs(dz) <= 3) || (dz == 0 && Math.abs(dx) <= 3)) {
-				if (Math.abs(dx) == 3 || Math.abs(dz) == 3) {
-					primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
-				}
+			if ((dx == 0 && az == 3) || (dz == 0 && ax == 3)) {
+				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
 			}
 		}
 	}

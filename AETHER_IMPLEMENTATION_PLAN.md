@@ -81,7 +81,7 @@ This is an implementation plan, not a claim that the dimension or portal is alre
 
 ### Current validation boundary
 - Offline TeaVM builds have passed for earlier commits on this branch.
-- A fresh build is running for the crystal item registration and spawn-safety changes.
+- GitHub Actions run `44784579193` passed for the crystal inventory registration and spawn-safety changes; artifact `14653024086` was downloaded and passed ZIP integrity checks.
 - No actual browser gameplay test has been completed. Portal activation/travel, chunk rendering, and save/reload still require runtime verification.
 - This is a native Aether-inspired implementation, not a complete port of the original Aether mod.
 

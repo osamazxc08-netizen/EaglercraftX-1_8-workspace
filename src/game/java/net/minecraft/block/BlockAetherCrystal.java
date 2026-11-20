@@ -15,7 +15,6 @@ public class BlockAetherCrystal extends Block {
 		this.setResistance(4.0F);
 		this.setLightLevel(0.8F);
 		this.setStepSound(soundTypeGlass);
-		this.setBlockTextureName("quartz_block_top");
 		this.setUnlocalizedName("aetherCrystal");
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}

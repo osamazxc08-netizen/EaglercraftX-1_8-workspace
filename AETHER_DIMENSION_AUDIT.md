@@ -28,3 +28,9 @@ Audited against the current deobfuscated EaglercraftX 1.8 source.
 ## Current status
 
 This commit is an audit/documentation checkpoint only. It does not add a playable Aether dimension, portal, generator, mobs, or assets. The CI run associated with the current branch was still in progress at the time of this audit; a successful build must be confirmed separately.
+
+## Additional transfer-path finding
+
+- `ServerConfigurationManager.transferEntityToWorld` contains vanilla coordinate scaling rules for Nether/Overworld and otherwise uses the destination provider's spawn coordinate. For destinations other than End (dimension 1), it then calls `parWorldServer2.getDefaultTeleporter().placeInPortal(...)`. Aether must therefore supply a safe provider spawn coordinate and a dedicated teleporter strategy (or a carefully isolated transfer override) so the generic Nether teleporter cannot create/search vanilla Nether portals in the Aether world.
+- The transfer routine's coordinate scaling is dimension-specific and only models dimension -1 versus dimension 0. Aether travel should preserve or deliberately map coordinates rather than accidentally inheriting the Nether's 8:1 scaling behavior.
+- The current code's fallback branch treats any non-1 destination similarly for spawn selection, so dimension 2 cannot be considered complete merely by adding it to `worldServerForDimension`.

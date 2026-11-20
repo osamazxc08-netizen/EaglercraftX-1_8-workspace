@@ -53,7 +53,7 @@ The following native source changes are now present on `aether-integration`:
 
 ### Build verification
 
-- GitHub Actions builds were triggered for the ruins and Aether Crystal updates. The latest full build is run `44774399995` for commit `eb8f48f2b869641c84a2175f831a23562fa661aa`; its result is pending.
+- GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; its result is pending.
 - Previous verified build: GitHub Actions run 22: `44766437918`
 - Result: `completed / success`
 - Task: `:target_teavm_javascript:makeMainOfflineDownload`

@@ -74,3 +74,17 @@ The following native source changes are now present on `aether-integration`:
 - Still missing: additional Aether-specific blocks/items, full structures/dungeons, Aether-specific creatures, dedicated Aether sound assets, and a dedicated blue portal texture. The portal now emits cool-toned spell particles and a quieter, higher-pitched portal ambience using existing sounds. The Aether sky now uses the standard surface celestial renderer with its pale-blue fog; a custom skybox remains future work.
 - To return from Aether with the current implementation, build another glowstone-and-water portal in the Aether dimension.
 - Keep PR #1 as Draft until those runtime checks and remaining content are complete.
+
+## Review pass — 2026-11-20 (latest build)
+
+- Reviewed the built offline artifact from workflow run `44795923097`, commit `f46bd9120c03d686a574ca8697c0df004ea9130b`, result `completed / success`.
+- Artifact `EaglercraftX-1.8-Offline`, ID `14657683521`, size 37,260,591 bytes. ZIP integrity check passed (87 files).
+- The artifact contains the full offline English and International Eaglercraft HTML clients. The English offline HTML embeds its compiled client code and EPK asset data directly; it is not merely a prototype page.
+- `classes.js` passed `node --check`; the compiled output contains the Aether provider, floating-island generator, portal, and crystal identifiers.
+- Decompressed the EPK v2 resource payload and confirmed the Aether Crystal blockstate, block model, item model, and English localization are packaged.
+- Review found the earlier ruin platform inherited per-column island height variation. The generator now flattens a 7x7 footprint before placing the level 5x5 altar and corner pillars. This correction is included in the successful build above.
+- Attempted a local Chromium smoke test, but Chromium did not complete even a blank-page headless launch in this environment. Therefore actual menu startup, world creation, portal activation/travel, and save/reload remain unverified.
+
+### Scope clarification
+
+This is a modified native Eaglercraft 1.8.8 offline client with an Aether dimension foundation, not a complete port of the original Aether mod. Still outstanding: Aether-specific creatures, full dungeons/interiors/loot, additional Aether blocks/items, dedicated Aether sound assets, and a dedicated blue portal texture/custom skybox. The current portal uses blue-tinted particles and an existing portal sound; the crystal uses the vanilla quartz texture. The PR remains Draft pending gameplay validation and content completion.

@@ -40,6 +40,9 @@ public class ChunkProviderAether implements IChunkProvider {
 		double bestDistance = Double.MAX_VALUE;
 		int islandTop = 88;
 		int islandThickness = 20;
+		int bestCenterX = 0;
+		int bestCenterZ = 0;
+		int bestHash = 0;
 
 		for (int cx = cellX - 1; cx <= cellX + 1; ++cx) {
 			for (int cz = cellZ - 1; cz <= cellZ + 1; ++cz) {
@@ -53,6 +56,9 @@ public class ChunkProviderAether implements IChunkProvider {
 				double distance = dx * dx + dz * dz;
 				if (distance < bestDistance) {
 					bestDistance = distance;
+					bestCenterX = centerX;
+					bestCenterZ = centerZ;
+					bestHash = h;
 					islandTop = 86 + (int) (Math.sin(worldX * 0.045D) * 3.0D
 							+ Math.cos(worldZ * 0.041D) * 3.0D) + ((h >>> 12) % 3);
 					islandThickness = 9 + (int) ((1.0D - Math.min(distance, 1.0D)) * 18.0D);
@@ -72,6 +78,24 @@ public class ChunkProviderAether implements IChunkProvider {
 				primer.setBlockState(localX, y, localZ, Blocks.dirt.getDefaultState());
 			} else {
 				primer.setBlockState(localX, y, localZ, Blocks.stone.getDefaultState());
+			}
+		}
+
+		// Small deterministic stone ruins appear on selected outer islands.
+		// The central spawn island is intentionally kept clear.
+		if ((bestHash % 4) == 0 && (bestCenterX != 0 || bestCenterZ != 0)) {
+			int dx = worldX - bestCenterX;
+			int dz = worldZ - bestCenterZ;
+			boolean corner = (Math.abs(dx) == 3 && Math.abs(dz) == 3);
+			if (corner) {
+				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
+				primer.setBlockState(localX, islandTop + 2, localZ, Blocks.stonebrick.getDefaultState());
+				primer.setBlockState(localX, islandTop + 3, localZ, Blocks.glowstone.getDefaultState());
+			}
+			if ((dx == 0 && Math.abs(dz) <= 3) || (dz == 0 && Math.abs(dx) <= 3)) {
+				if (Math.abs(dx) == 3 || Math.abs(dz) == 3) {
+					primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
+				}
 			}
 		}
 	}

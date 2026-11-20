@@ -6,6 +6,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 /**
@@ -83,6 +84,21 @@ public class BlockAetherPortal extends BlockPortal {
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighbor) {
 		// Portal integrity is checked during activation; keep the active gateway stable.
+	}
+
+	@Override
+	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, EaglercraftRandom random) {
+		if (random.nextInt(120) == 0) {
+			world.playSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D,
+					(double) pos.getZ() + 0.5D, "portal.portal", 0.35F,
+					1.15F + random.nextFloat() * 0.25F, false);
+		}
+		for (int i = 0; i < 2; ++i) {
+			double x = (double) pos.getX() + random.nextFloat();
+			double y = (double) pos.getY() + random.nextFloat();
+			double z = (double) pos.getZ() + random.nextFloat();
+			world.spawnParticle(EnumParticleTypes.SPELL_MOB, x, y, z, 0.25D, 0.75D, 1.0D);
+		}
 	}
 
 	@Override

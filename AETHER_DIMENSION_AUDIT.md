@@ -88,3 +88,19 @@ The following native source changes are now present on `aether-integration`:
 ### Scope clarification
 
 This is a modified native Eaglercraft 1.8.8 offline client with an Aether dimension foundation, not a complete port of the original Aether mod. Still outstanding: Aether-specific creatures, full dungeons/interiors/loot, additional Aether blocks/items, dedicated Aether sound assets, and a dedicated blue portal texture/custom skybox. The current portal uses blue-tinted particles and an existing portal sound; the crystal uses the vanilla quartz texture. The PR remains Draft pending gameplay validation and content completion.
+
+
+## Latest verification pass — 2026-11-20
+
+- Reviewed source on branch `aether-integration`, commit `73add4a241bd526f22eb3a0c9b6c5e970c8385e0`.
+- Found and corrected a spawn-height issue: the central island surface generated between Y=89 and Y=91, while the previous spawn Y=90 could intersect the surface. `WorldProviderAether.getSpawnCoordinate()` now uses Y=93.
+- A deterministic calculation check covered 5,003 representative world seeds: central-island top remained in the expected 89–91 range, and Y=93 stayed above it. A focused portal-offset check confirmed that the activation search covers all six cells of the 2×3 opening.
+- GitHub Actions run `44797264427` completed successfully for this exact commit. Build, offline-output verification, and artifact upload steps all passed.
+- Artifact `EaglercraftX-1.8-Offline`, ID `14659251985`, size 37,260,595 bytes. SHA-256: `18437415668b151f276dec2526a7e564f04ac42913e1cb99162d64ab84ba286a`.
+- Downloaded artifact ZIP passed integrity validation (87 entries); the SHA-256 matched GitHub's artifact digest. Both offline HTML clients are present. `classes.js` passed `node --check` and contains Aether dimension/generator/portal/crystal markers. The packaged EPK v2 file is present.
+- A local Chromium headless attempt against the full offline HTML did not complete before the environment timeout; actual menu startup and in-game portal/travel/save-reload remain unverified.
+- CodeRabbit CLI was absent; its official installer could not be reached because DNS resolution for `cli.coderabbit.ai` failed. No CodeRabbit review result is claimed. CircleCI CLI/integration was also unavailable in this environment; GitHub Actions provided the successful CI build instead.
+- The PR currently has no submitted review entries and remains Draft.
+
+### Current scope
+This is a modified native Eaglercraft 1.8.8 offline client with an Aether dimension foundation, not a complete port of the original Aether mod. Full dungeons/interiors/loot, Aether-specific creatures, additional Aether items/blocks, dedicated Aether audio, a unique blue portal texture, and a custom skybox remain unfinished. The current portal has cool-toned particles but still uses the existing portal texture and sound.

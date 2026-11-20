@@ -53,10 +53,10 @@ The following native source changes are now present on `aether-integration`:
 
 ### Build verification
 
-- Latest offline JavaScript build: GitHub Actions run `44780987306`, commit `d20dfbb80e06d6f8932deb72481fcf69a486f321`, result `completed / success`. The workflow verified both offline HTML clients and `classes.js` before upload, and now rebuilds when bundled desktop resource files change.
+- Latest offline JavaScript build: GitHub Actions run `44784579193`, commit `c44d879c2d5530c6240f19b815fa3f1f2eba6faf`, result `completed / success`. It includes the Aether Crystal inventory registration and the fix preventing Endermen from spawning in Aether.
 - Previous verified build: GitHub Actions run `44774687307` completed successfully with artifact ID `14648562483`.
 - GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; result: `completed / success`.
-- Latest artifact: `EaglercraftX-1.8-Offline`, artifact ID `14648562483`, 37,238,217 bytes. Downloaded ZIP passed integrity inspection (87 entries); `classes.js` contains the Aether provider, generator, portal, and crystal identifiers.
+- Latest artifact: `EaglercraftX-1.8-Offline`, artifact ID `14653024086`, 37,238,639 bytes. Downloaded ZIP passed integrity inspection (87 entries); `classes.js` contains the Aether provider, generator, portal, and crystal identifiers. The crystal block is now registered as an inventory ItemBlock.
 - Previous verified build: GitHub Actions run 22: `44766437918`
 - Result: `completed / success`
 - Task: `:target_teavm_javascript:makeMainOfflineDownload`
@@ -67,6 +67,6 @@ The following native source changes are now present on `aether-integration`:
 
 - Browser gameplay smoke test was attempted with local headless Chromium, but the environment blocked navigation with `ERR_BLOCKED_BY_ADMINISTRATOR`; therefore no in-game behavior is claimed as verified. A successful Gradle/TeaVM build proves compilation and packaging, not that portal activation, chunk generation, rendering, travel, and saving all behave correctly at runtime.
 - The implementation is a native Aether foundation, not a full port of the original Aether mod.
-- Still missing: additional Aether-specific blocks/items, full structures/dungeons, creatures, sound set, and a dedicated blue portal texture/particles. The Aether sky now uses the standard surface celestial renderer with its pale-blue fog; a custom skybox remains future work.
+- Still missing: additional Aether-specific blocks/items, full structures/dungeons, Aether-specific creatures, sound set, and a dedicated blue portal texture/particles. The Aether sky now uses the standard surface celestial renderer with its pale-blue fog; a custom skybox remains future work.
 - To return from Aether with the current implementation, build another glowstone-and-water portal in the Aether dimension.
 - Keep PR #1 as Draft until those runtime checks and remaining content are complete.

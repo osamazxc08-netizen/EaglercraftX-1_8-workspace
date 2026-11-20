@@ -5,7 +5,7 @@ import net.minecraft.creativetab.CreativeTabs;
 
 /**
  * Decorative light-emitting crystal found in Aether ruins.
- * Uses a vanilla atlas texture so no external resource pack is required.
+ * Uses the vanilla quartz texture through the bundled block/item model JSON.
  */
 public class BlockAetherCrystal extends Block {
 

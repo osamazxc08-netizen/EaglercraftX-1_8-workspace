@@ -1,0 +1,50 @@
+name: Build Eaglercraft Offline Client
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'target_teavm_javascript/**'
+      - 'gradle/**'
+      - '*.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/build.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eaglercraft-offline-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build offline JavaScript client
+        run: ./gradlew --no-daemon :target_teavm_javascript:makeMainOfflineDownload
+
+      - name: Upload offline client
+        uses: actions/upload-artifact@v4
+        with:
+          name: EaglercraftX-1.8-Offline
+          path: |
+            target_teavm_javascript/javascript/**
+          if-no-files-found: error
+          retention-days: 7

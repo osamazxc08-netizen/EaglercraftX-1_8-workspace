@@ -38,6 +38,13 @@ public class BlockDynamicLiquid extends BlockLiquid {
 		super(materialIn);
 	}
 
+	@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+		if (this.blockMaterial == Material.water) {
+			BlockAetherPortal.tryCreatePortal(world, pos);
+		}
+	}
+
 	private void placeStaticBlock(World worldIn, BlockPos pos, IBlockState currentState) {
 		worldIn.setBlockState(pos,
 				getStaticBlock(this.blockMaterial).getDefaultState().withProperty(LEVEL, currentState.getValue(LEVEL)),

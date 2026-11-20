@@ -53,7 +53,8 @@ The following native source changes are now present on `aether-integration`:
 
 ### Build verification
 
-- GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; its result is pending.
+- GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; result: `completed / success`.
+- Latest artifact: `EaglercraftX-1.8-Offline`, artifact ID `14648562483`, 37,238,217 bytes. Downloaded ZIP passed integrity inspection (87 entries); `classes.js` contains the Aether provider, generator, portal, and crystal identifiers.
 - Previous verified build: GitHub Actions run 22: `44766437918`
 - Result: `completed / success`
 - Task: `:target_teavm_javascript:makeMainOfflineDownload`

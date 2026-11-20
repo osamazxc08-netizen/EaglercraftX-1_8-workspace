@@ -1,6 +1,7 @@
 package net.minecraft.world.gen;
 
 import java.util.List;
+import java.util.Collections;
 
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -171,7 +172,9 @@ public class ChunkProviderAether implements IChunkProvider {
 
 	@Override
 	public List<BiomeGenBase.SpawnListEntry> getPossibleCreatures(EnumCreatureType type, BlockPos pos) {
-		return this.world.getBiomeGenForCoords(pos).getSpawnableList(type);
+		// The vanilla sky biome is also used by The End and includes Endermen.
+		// Keep the Aether calm until its own creature roster is implemented.
+		return Collections.emptyList();
 	}
 
 	@Override

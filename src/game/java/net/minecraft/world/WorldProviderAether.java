@@ -33,7 +33,9 @@ public class WorldProviderAether extends WorldProvider {
 
 	@Override
 	public boolean isSurfaceWorld() {
-		return false;
+		// RenderGlobal uses this flag to draw the normal sky, sun, moon, and stars.
+		// Keep Aether non-respawnable, but render its sky like a surface dimension.
+		return true;
 	}
 
 	@Override

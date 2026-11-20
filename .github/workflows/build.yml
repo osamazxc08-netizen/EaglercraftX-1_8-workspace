@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - aether-integration
     paths:
       - 'src/**'
       - 'target_teavm_javascript/**'

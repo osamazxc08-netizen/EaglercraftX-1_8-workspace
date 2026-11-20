@@ -52,6 +52,9 @@ public class BlockStaticLiquid extends BlockLiquid {
 	public void onNeighborBlockChange(World world, BlockPos blockpos, IBlockState iblockstate, Block var4) {
 		if (this.blockMaterial == Material.water) {
 			BlockAetherPortal.tryCreatePortal(world, blockpos);
+			if (world.getBlockState(blockpos).getBlock() == Blocks.aether_portal) {
+				return;
+			}
 		}
 		if (!this.checkForMixing(world, blockpos, iblockstate)) {
 			this.updateLiquid(world, blockpos, iblockstate);

@@ -53,7 +53,7 @@ The following native source changes are now present on `aether-integration`:
 
 ### Build verification
 
-- A fresh offline JavaScript build is running for the Aether sky-rendering fix and workflow-output validation. The workflow now also rebuilds when bundled desktop resource files change, and verifies both offline HTML clients plus `classes.js` before upload.
+- Latest offline JavaScript build: GitHub Actions run `44780987306`, commit `d20dfbb80e06d6f8932deb72481fcf69a486f321`, result `completed / success`. The workflow verified both offline HTML clients and `classes.js` before upload, and now rebuilds when bundled desktop resource files change.
 - Previous verified build: GitHub Actions run `44774687307` completed successfully with artifact ID `14648562483`.
 - GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; result: `completed / success`.
 - Latest artifact: `EaglercraftX-1.8-Offline`, artifact ID `14648562483`, 37,238,217 bytes. Downloaded ZIP passed integrity inspection (87 entries); `classes.js` contains the Aether provider, generator, portal, and crystal identifiers.
@@ -65,7 +65,7 @@ The following native source changes are now present on `aether-integration`:
 
 ### Remaining work / not yet verified
 
-- No browser gameplay smoke test has been performed. A successful Gradle/TeaVM build proves compilation and packaging, not that portal activation, chunk generation, rendering, travel, and saving all behave correctly at runtime.
+- Browser gameplay smoke test was attempted with local headless Chromium, but the environment blocked navigation with `ERR_BLOCKED_BY_ADMINISTRATOR`; therefore no in-game behavior is claimed as verified. A successful Gradle/TeaVM build proves compilation and packaging, not that portal activation, chunk generation, rendering, travel, and saving all behave correctly at runtime.
 - The implementation is a native Aether foundation, not a full port of the original Aether mod.
 - Still missing: additional Aether-specific blocks/items, full structures/dungeons, creatures, sound set, and a dedicated blue portal texture/particles. The Aether sky now uses the standard surface celestial renderer with its pale-blue fog; a custom skybox remains future work.
 - To return from Aether with the current implementation, build another glowstone-and-water portal in the Aether dimension.

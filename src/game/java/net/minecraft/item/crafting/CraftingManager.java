@@ -142,6 +142,8 @@ public class CraftingManager {
 				new Object[] { "##", "##", Character.valueOf('#'), Items.glowstone_dust });
 		this.addRecipe(new ItemStack(Blocks.quartz_block, 1),
 				new Object[] { "##", "##", Character.valueOf('#'), Items.quartz });
+		this.addRecipe(new ItemStack(Blocks.aether_crystal, 1),
+				new Object[] { "Q Q", " Q ", "Q Q", Character.valueOf('Q'), Items.quartz });
 		this.addRecipe(new ItemStack(Blocks.wool, 1),
 				new Object[] { "##", "##", Character.valueOf('#'), Items.string });
 		this.addRecipe(new ItemStack(Blocks.tnt, 1), new Object[] { "X#X", "#X#", "X#X", Character.valueOf('X'),

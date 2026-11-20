@@ -1,5 +1,6 @@
 package net.minecraft.block;
 
+import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -72,6 +73,11 @@ public class BlockAetherPortal extends BlockPortal {
 			}
 		}
 		return hasWater;
+	}
+
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, EaglercraftRandom random) {
+		// Aether gateways do not use the Nether portal's random spawn behavior.
 	}
 
 	@Override

@@ -66,3 +66,27 @@ This is an implementation plan, not a claim that the dimension or portal is alre
 - Player-built Aether portal activates only when the specified structure is valid.
 - Player can travel both ways; world state persists after closing/reopening the offline client.
 - Offline build includes all required code and assets and passes a browser smoke test.
+
+
+## Progress update — 2026-11-20
+
+### Implemented on the integration branch
+- Native dimension provider and deterministic floating-island chunk generator.
+- Player-built glowstone/water portal and dimension travel routing.
+- Simple deterministic stone-brick ruin markers on selected outer islands.
+- Bundled Aether Crystal blockstate, block model, and item model resources.
+- Aether Crystal inventory registration, making the existing quartz-based crafting recipe usable.
+- Dedicated Aether sky presentation changes are present in the branch.
+- Aether mob spawning is disabled until Aether-specific creatures are implemented; this avoids inheriting Enderman spawns from the reused vanilla End biome.
+
+### Current validation boundary
+- Offline TeaVM builds have passed for earlier commits on this branch.
+- A fresh build is running for the crystal item registration and spawn-safety changes.
+- No actual browser gameplay test has been completed. Portal activation/travel, chunk rendering, and save/reload still require runtime verification.
+- This is a native Aether-inspired implementation, not a complete port of the original Aether mod.
+
+### Remaining work
+- Implement Aether-specific peaceful/ambient creatures and safe spawn rules.
+- Add dedicated Aether portal texture and particles, plus ambient audio.
+- Expand the simple ruin markers into full structures with interiors and loot.
+- Verify portal travel in both directions, save isolation, and save/reload in browser.

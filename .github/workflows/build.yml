@@ -19,8 +19,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: eaglercraft-offline-build-${{ github.ref }}-${{ github.sha }}
-  cancel-in-progress: false
+  group: eaglercraft-offline-build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:

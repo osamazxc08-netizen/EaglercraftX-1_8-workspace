@@ -155,7 +155,7 @@ public abstract class MinecraftServer implements Runnable, ICommandSender, IThre
 
 	protected void loadAllWorlds(ISaveHandler isavehandler, String s1, WorldSettings worldsettings) {
 		this.setUserMessage("menu.loadingLevel");
-		this.worldServers = new WorldServer[3];
+		this.worldServers = new WorldServer[4];
 		this.timeOfLastDimensionTick = new long[this.worldServers.length][100];
 		WorldInfo worldinfo = isavehandler.loadWorldInfo();
 		if (worldinfo == null) {
@@ -181,6 +181,10 @@ public abstract class MinecraftServer implements Runnable, ICommandSender, IThre
 
 			if (j == 2) {
 				b0 = 1;
+			}
+
+			if (j == 3) {
+				b0 = 2;
 			}
 
 			if (j == 0) {
@@ -547,7 +551,8 @@ public abstract class MinecraftServer implements Runnable, ICommandSender, IThre
 	 * Gets the worldServer by the given dimension.
 	 */
 	public WorldServer worldServerForDimension(int dimension) {
-		return dimension == -1 ? this.worldServers[1] : (dimension == 1 ? this.worldServers[2] : this.worldServers[0]);
+		return dimension == -1 ? this.worldServers[1]
+				: (dimension == 1 ? this.worldServers[2] : (dimension == 2 ? this.worldServers[3] : this.worldServers[0]));
 	}
 
 	/**+

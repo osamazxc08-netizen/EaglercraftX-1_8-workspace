@@ -39,10 +39,20 @@ public class BlockStaticLiquid extends BlockLiquid {
 
 	}
 
+	@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+		if (this.blockMaterial == Material.water) {
+			BlockAetherPortal.tryCreatePortal(world, pos);
+		}
+	}
+
 	/**+
 	 * Called when a neighboring block changes.
 	 */
 	public void onNeighborBlockChange(World world, BlockPos blockpos, IBlockState iblockstate, Block var4) {
+		if (this.blockMaterial == Material.water) {
+			BlockAetherPortal.tryCreatePortal(world, blockpos);
+		}
 		if (!this.checkForMixing(world, blockpos, iblockstate)) {
 			this.updateLiquid(world, blockpos, iblockstate);
 		}

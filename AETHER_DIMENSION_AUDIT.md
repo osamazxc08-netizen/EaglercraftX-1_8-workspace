@@ -49,10 +49,12 @@ The following native source changes are now present on `aether-integration`:
 - A glowstone frame (4 blocks wide by 5 high, with a 2 by 3 opening) activates when water is placed in the opening. The interior becomes Aether portal blocks.
 - Entity portal handling routes Aether portal collisions between dimension 0 and dimension 2.
 - Aether transfers use the destination spawn and deliberately bypass the vanilla Nether teleporter and its 8:1 coordinate scaling.
-- The Aether provider uses the sky biome, a pale-blue fog, a low cloud height, a unique `_aether` storage suffix, and an Aether-specific spawn coordinate.
+- The Aether provider uses the sky biome, a pale-blue fog, a low cloud height, a unique `_aether` storage suffix, and an Aether-specific spawn coordinate. Its surface-render flag is enabled so the client draws the normal sky, sun, moon, and stars while the dimension remains non-respawnable.
 
 ### Build verification
 
+- A fresh offline JavaScript build is running for the Aether sky-rendering fix.
+- Previous verified build: GitHub Actions run `44774687307` completed successfully with artifact ID `14648562483`.
 - GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; result: `completed / success`.
 - Latest artifact: `EaglercraftX-1.8-Offline`, artifact ID `14648562483`, 37,238,217 bytes. Downloaded ZIP passed integrity inspection (87 entries); `classes.js` contains the Aether provider, generator, portal, and crystal identifiers.
 - Previous verified build: GitHub Actions run 22: `44766437918`
@@ -65,6 +67,6 @@ The following native source changes are now present on `aether-integration`:
 
 - No browser gameplay smoke test has been performed. A successful Gradle/TeaVM build proves compilation and packaging, not that portal activation, chunk generation, rendering, travel, and saving all behave correctly at runtime.
 - The implementation is a native Aether foundation, not a full port of the original Aether mod.
-- Still missing: Aether-specific blocks/items and recipes, structures/dungeons, creatures, sound set, dedicated blue portal texture/particles, and fuller Aether sky presentation.
+- Still missing: additional Aether-specific blocks/items, full structures/dungeons, creatures, sound set, and a dedicated blue portal texture/particles. The Aether sky now uses the standard surface celestial renderer with its pale-blue fog; a custom skybox remains future work.
 - To return from Aether with the current implementation, build another glowstone-and-water portal in the Aether dimension.
 - Keep PR #1 as Draft until those runtime checks and remaining content are complete.

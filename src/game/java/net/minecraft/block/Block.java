@@ -1547,6 +1547,7 @@ public class Block {
 		registerBlock(197, (String) "dark_oak_door", (new BlockDoor(Material.wood)).setHardness(3.0F)
 				.setStepSound(soundTypeWood).setUnlocalizedName("doorDarkOak").disableStats());
 		registerBlock(198, (String) "aether_portal", (new BlockAetherPortal()).setUnlocalizedName("aetherPortal"));
+		registerBlock(199, (String) "aether_crystal", new BlockAetherCrystal());
 		blockRegistry.validateKey();
 
 		for (Block block13 : blockRegistry) {

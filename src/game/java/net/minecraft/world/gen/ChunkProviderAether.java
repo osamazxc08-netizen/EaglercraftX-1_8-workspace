@@ -15,12 +15,33 @@ import net.minecraft.world.chunk.IChunkProvider;
 
 /**
  * Lightweight deterministic floating-island generator for the native Aether
- * dimension. Islands are generated from world coordinates, so neighboring
- * chunks join without seams and the central island always contains the spawn.
+ * dimension. Candidate island data is calculated once per chunk rather than
+ * once per block column to reduce CPU work on low-end devices.
  */
 public class ChunkProviderAether implements IChunkProvider {
 
 	private static final int ISLAND_SPACING = 240;
+	private static final int CHUNK_SIZE = 16;
+	private static final IslandData[] NO_ISLANDS = new IslandData[0];
+
+	private static final class IslandData {
+		final int centerX;
+		final int centerZ;
+		final int radiusX;
+		final int radiusZ;
+		final int hash;
+		final boolean central;
+
+		IslandData(int centerX, int centerZ, int radiusX, int radiusZ, int hash, boolean central) {
+			this.centerX = centerX;
+			this.centerZ = centerZ;
+			this.radiusX = radiusX;
+			this.radiusZ = radiusZ;
+			this.hash = hash;
+			this.central = central;
+		}
+	}
+
 	private final World world;
 
 	public ChunkProviderAether(World worldIn) {
@@ -35,64 +56,82 @@ public class ChunkProviderAether implements IChunkProvider {
 		return (int) (value & 0x7fffffff);
 	}
 
-	private void generateColumn(ChunkPrimer primer, int worldX, int worldZ, int localX, int localZ) {
-		int cellX = Math.floorDiv(worldX, ISLAND_SPACING);
-		int cellZ = Math.floorDiv(worldZ, ISLAND_SPACING);
-		double bestDistance = Double.MAX_VALUE;
-		int islandTop = 88;
-		int islandThickness = 20;
-		int bestCenterX = 0;
-		int bestCenterZ = 0;
-		int bestHash = 0;
+	private IslandData[] prepareIslands(int chunkX, int chunkZ) {
+		int minCellX = Math.floorDiv(chunkX * CHUNK_SIZE, ISLAND_SPACING) - 1;
+		int minCellZ = Math.floorDiv(chunkZ * CHUNK_SIZE, ISLAND_SPACING) - 1;
+		IslandData[] islands = new IslandData[9];
+		int index = 0;
+		long seed = this.world.getSeed();
+		for (int cx = minCellX; cx <= minCellX + 2; ++cx) {
+			for (int cz = minCellZ; cz <= minCellZ + 2; ++cz) {
+				int h = hash(cx, cz, seed);
+				boolean central = cx == 0 && cz == 0;
+				int centerX = cx * ISLAND_SPACING + (central ? 0 : (h % 57) - 28);
+				int centerZ = cz * ISLAND_SPACING + (central ? 0 : ((h >>> 7) % 57) - 28);
+				int radiusX = central ? 88 : 48 + (h % 27);
+				int radiusZ = central ? 88 : 45 + ((h >>> 5) % 29);
+				islands[index++] = new IslandData(centerX, centerZ, radiusX, radiusZ, h, central);
+			}
+		}
+		return islands;
+	}
 
-		for (int cx = cellX - 1; cx <= cellX + 1; ++cx) {
-			for (int cz = cellZ - 1; cz <= cellZ + 1; ++cz) {
-				int h = hash(cx, cz, this.world.getSeed());
-				int centerX = cx * ISLAND_SPACING + (cx == 0 && cz == 0 ? 0 : (h % 57) - 28);
-				int centerZ = cz * ISLAND_SPACING + (cx == 0 && cz == 0 ? 0 : ((h >>> 7) % 57) - 28);
-				int radiusX = cx == 0 && cz == 0 ? 88 : 48 + (h % 27);
-				int radiusZ = cx == 0 && cz == 0 ? 88 : 45 + ((h >>> 5) % 29);
-				double dx = (double) (worldX - centerX) / (double) radiusX;
-				double dz = (double) (worldZ - centerZ) / (double) radiusZ;
-				double distance = dx * dx + dz * dz;
-				if (distance < bestDistance) {
-					bestDistance = distance;
-					bestCenterX = centerX;
-					bestCenterZ = centerZ;
-					bestHash = h;
-					islandTop = 86 + (int) (Math.sin(worldX * 0.045D) * 3.0D
-							+ Math.cos(worldZ * 0.041D) * 3.0D) + ((h >>> 12) % 3);
-					islandThickness = 9 + (int) ((1.0D - Math.min(distance, 1.0D)) * 18.0D);
-				}
+	/**
+	 * Small integer triangle wave: visually smooth enough for island contours,
+	 * but avoids calling sin/cos hundreds of times for every generated chunk.
+	 */
+	private static int heightWave(int coordinate, int period, int amplitude) {
+		int phase = Math.floorMod(coordinate, period);
+		int half = period >> 1;
+		int triangle = phase < half ? phase : period - phase;
+		return (triangle * amplitude * 2 / half) - amplitude;
+	}
+
+	private void generateColumn(ChunkPrimer primer, int worldX, int worldZ, int localX, int localZ,
+			IslandData[] islands) {
+		int bestDistance = Integer.MAX_VALUE;
+		IslandData bestIsland = null;
+		int bestHeight = 88;
+		int bestThickness = 20;
+
+		for (int i = 0; i < islands.length; ++i) {
+			IslandData island = islands[i];
+			int dx = worldX - island.centerX;
+			int dz = worldZ - island.centerZ;
+			int nx = dx * 256 / island.radiusX;
+			int nz = dz * 256 / island.radiusZ;
+			int distance = nx * nx + nz * nz;
+			if (distance < bestDistance) {
+				bestDistance = distance;
+				bestIsland = island;
+				bestHeight = 86 + heightWave(worldX, 140, 3) + heightWave(worldZ, 128, 3)
+						+ ((island.hash >>> 12) % 3);
+				bestThickness = 9 + (int) ((1.0D - Math.min(distance / 65536.0D, 1.0D)) * 18.0D);
 			}
 		}
 
-		if (bestDistance > 1.0D) {
+		if (bestIsland == null || bestDistance > 65536) {
 			return;
 		}
 
-		int bottom = islandTop - islandThickness;
-		for (int y = Math.max(1, bottom); y <= islandTop; ++y) {
-			if (y == islandTop) {
+		int bottom = bestHeight - bestThickness;
+		for (int y = Math.max(1, bottom); y <= bestHeight; ++y) {
+			if (y == bestHeight) {
 				primer.setBlockState(localX, y, localZ, Blocks.grass.getDefaultState());
-			} else if (y >= islandTop - 3) {
+			} else if (y >= bestHeight - 3) {
 				primer.setBlockState(localX, y, localZ, Blocks.dirt.getDefaultState());
 			} else {
 				primer.setBlockState(localX, y, localZ, Blocks.stone.getDefaultState());
 			}
 		}
 
-		// Small deterministic stone ruins appear on selected outer islands.
-		// The central spawn island is intentionally kept clear.
-		if ((bestHash % 4) == 0 && (bestCenterX != 0 || bestCenterZ != 0)) {
-			int dx = worldX - bestCenterX;
-			int dz = worldZ - bestCenterZ;
+		if ((bestIsland.hash % 4) == 0 && !bestIsland.central) {
+			int dx = worldX - bestIsland.centerX;
+			int dz = worldZ - bestIsland.centerZ;
 			int ax = Math.abs(dx);
 			int az = Math.abs(dz);
-			int ruinTop = 89 + ((bestHash >>> 12) % 3);
+			int ruinTop = 89 + ((bestIsland.hash >>> 12) % 3);
 
-			// Flatten a 7x7 footprint first so the altar cannot inherit the
-			// island generator's per-column height variation.
 			if (ax <= 3 && az <= 3) {
 				for (int y = Math.max(1, bottom); y <= ruinTop; ++y) {
 					if (y == ruinTop) {
@@ -108,15 +147,12 @@ public class ChunkProviderAether implements IChunkProvider {
 				}
 			}
 
-			// A compact, level 5x5 altar platform with a raised crystal.
 			if (ax <= 2 && az <= 2) {
 				primer.setBlockState(localX, ruinTop + 1, localZ, Blocks.stonebrick.getDefaultState());
 			}
 			if (dx == 0 && dz == 0) {
 				primer.setBlockState(localX, ruinTop + 2, localZ, Blocks.aether_crystal.getDefaultState());
 			}
-
-			// Four short corner pillars; the cardinal sides remain open.
 			if (ax == 3 && az == 3) {
 				primer.setBlockState(localX, ruinTop + 1, localZ, Blocks.stonebrick.getDefaultState());
 				primer.setBlockState(localX, ruinTop + 2, localZ, Blocks.stonebrick.getDefaultState());
@@ -128,9 +164,12 @@ public class ChunkProviderAether implements IChunkProvider {
 	@Override
 	public Chunk provideChunk(int chunkX, int chunkZ) {
 		ChunkPrimer primer = new ChunkPrimer();
-		for (int x = 0; x < 16; ++x) {
-			for (int z = 0; z < 16; ++z) {
-				this.generateColumn(primer, chunkX * 16 + x, chunkZ * 16 + z, x, z);
+		IslandData[] islands = this.prepareIslands(chunkX, chunkZ);
+		int baseX = chunkX * CHUNK_SIZE;
+		int baseZ = chunkZ * CHUNK_SIZE;
+		for (int x = 0; x < CHUNK_SIZE; ++x) {
+			for (int z = 0; z < CHUNK_SIZE; ++z) {
+				this.generateColumn(primer, baseX + x, baseZ + z, x, z, islands);
 			}
 		}
 		Chunk chunk = new Chunk(this.world, primer, chunkX, chunkZ);
@@ -159,7 +198,6 @@ public class ChunkProviderAether implements IChunkProvider {
 
 	@Override
 	public void populate(IChunkProvider provider, int x, int z) {
-		// Aether islands are fully defined during chunk creation.
 	}
 
 	@Override
@@ -193,8 +231,6 @@ public class ChunkProviderAether implements IChunkProvider {
 
 	@Override
 	public List<BiomeGenBase.SpawnListEntry> getPossibleCreatures(EnumCreatureType type, BlockPos pos) {
-		// The vanilla sky biome is also used by The End and includes Endermen.
-		// Keep the Aether calm until its own creature roster is implemented.
 		return Collections.emptyList();
 	}
 

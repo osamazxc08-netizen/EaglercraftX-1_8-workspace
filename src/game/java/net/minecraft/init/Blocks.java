@@ -160,6 +160,7 @@ public class Blocks {
 	public static Block glowstone;
 	public static BlockPortal portal;
 	public static BlockAetherPortal aether_portal;
+	public static Block aether_crystal;
 	public static Block lit_pumpkin;
 	public static Block cake;
 	public static BlockRedstoneRepeater unpowered_repeater;
@@ -372,6 +373,7 @@ public class Blocks {
 			glowstone = getRegisteredBlock("glowstone");
 			portal = (BlockPortal) getRegisteredBlock("portal");
 			aether_portal = (BlockAetherPortal) getRegisteredBlock("aether_portal");
+			aether_crystal = getRegisteredBlock("aether_crystal");
 			lit_pumpkin = getRegisteredBlock("lit_pumpkin");
 			cake = getRegisteredBlock("cake");
 			unpowered_repeater = (BlockRedstoneRepeater) getRegisteredBlock("unpowered_repeater");

@@ -89,24 +89,38 @@ public class ChunkProviderAether implements IChunkProvider {
 			int dz = worldZ - bestCenterZ;
 			int ax = Math.abs(dx);
 			int az = Math.abs(dz);
-			boolean corner = (ax == 3 && az == 3);
+			int ruinTop = 89 + ((bestHash >>> 12) % 3);
 
-			// A compact 5x5 altar platform, with a crystal on a raised center tile.
+			// Flatten a 7x7 footprint first so the altar cannot inherit the
+			// island generator's per-column height variation.
+			if (ax <= 3 && az <= 3) {
+				for (int y = Math.max(1, bottom); y <= ruinTop; ++y) {
+					if (y == ruinTop) {
+						primer.setBlockState(localX, y, localZ, Blocks.grass.getDefaultState());
+					} else if (y >= ruinTop - 3) {
+						primer.setBlockState(localX, y, localZ, Blocks.dirt.getDefaultState());
+					} else {
+						primer.setBlockState(localX, y, localZ, Blocks.stone.getDefaultState());
+					}
+				}
+				for (int y = ruinTop + 1; y <= ruinTop + 4; ++y) {
+					primer.setBlockState(localX, y, localZ, Blocks.air.getDefaultState());
+				}
+			}
+
+			// A compact, level 5x5 altar platform with a raised crystal.
 			if (ax <= 2 && az <= 2) {
-				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
+				primer.setBlockState(localX, ruinTop + 1, localZ, Blocks.stonebrick.getDefaultState());
 			}
 			if (dx == 0 && dz == 0) {
-				primer.setBlockState(localX, islandTop + 2, localZ, Blocks.aether_crystal.getDefaultState());
+				primer.setBlockState(localX, ruinTop + 2, localZ, Blocks.aether_crystal.getDefaultState());
 			}
 
-			// Four short corner pillars and four open cardinal entrances.
-			if (corner) {
-				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
-				primer.setBlockState(localX, islandTop + 2, localZ, Blocks.stonebrick.getDefaultState());
-				primer.setBlockState(localX, islandTop + 3, localZ, Blocks.glowstone.getDefaultState());
-			}
-			if ((dx == 0 && az == 3) || (dz == 0 && ax == 3)) {
-				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
+			// Four short corner pillars; the cardinal sides remain open.
+			if (ax == 3 && az == 3) {
+				primer.setBlockState(localX, ruinTop + 1, localZ, Blocks.stonebrick.getDefaultState());
+				primer.setBlockState(localX, ruinTop + 2, localZ, Blocks.stonebrick.getDefaultState());
+				primer.setBlockState(localX, ruinTop + 3, localZ, Blocks.glowstone.getDefaultState());
 			}
 		}
 	}

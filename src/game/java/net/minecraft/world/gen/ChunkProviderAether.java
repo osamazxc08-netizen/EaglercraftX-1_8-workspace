@@ -57,23 +57,22 @@ public class ChunkProviderAether implements IChunkProvider {
 	}
 
 	private IslandData[] prepareIslands(int chunkX, int chunkZ) {
-		int minCellX = Math.floorDiv(chunkX * CHUNK_SIZE, ISLAND_SPACING);
-		int minCellZ = Math.floorDiv(chunkZ * CHUNK_SIZE, ISLAND_SPACING);
-		int maxCellX = Math.floorDiv(chunkX * CHUNK_SIZE + CHUNK_SIZE - 1, ISLAND_SPACING);
-		int maxCellZ = Math.floorDiv(chunkZ * CHUNK_SIZE + CHUNK_SIZE - 1, ISLAND_SPACING);
-		IslandData[] islands = new IslandData[(maxCellX - minCellX + 3) * (maxCellZ - minCellZ + 3)];
-		int index = 0;
+		// A compact Aether archipelago: one central spawn island and six outer islands.
+		// The fixed layout keeps exploration bounded and makes the world lighter to generate.
+		final int[] offsetsX = { 0, 240, 120, -120, -240, -120, 120 };
+		final int[] offsetsZ = { 0, 0, 208, 208, 0, -208, -208 };
+		IslandData[] islands = new IslandData[7];
 		long seed = this.world.getSeed();
-		for (int cx = minCellX - 1; cx <= maxCellX + 1; ++cx) {
-			for (int cz = minCellZ - 1; cz <= maxCellZ + 1; ++cz) {
-				int h = hash(cx, cz, seed);
-				boolean central = cx == 0 && cz == 0;
-				int centerX = cx * ISLAND_SPACING + (central ? 0 : (h % 57) - 28);
-				int centerZ = cz * ISLAND_SPACING + (central ? 0 : ((h >>> 7) % 57) - 28);
-				int radiusX = central ? 88 : 48 + (h % 27);
-				int radiusZ = central ? 88 : 45 + ((h >>> 5) % 29);
-				islands[index++] = new IslandData(centerX, centerZ, radiusX, radiusZ, h, central);
-			}
+
+		for (int i = 0; i < islands.length; ++i) {
+			int h = hash(i, i * 31, seed);
+			boolean central = i == 0;
+			int jitterX = central ? 0 : (h % 17) - 8;
+			int jitterZ = central ? 0 : ((h >>> 7) % 17) - 8;
+			int radiusX = central ? 88 : 54 + (h % 12);
+			int radiusZ = central ? 88 : 50 + ((h >>> 5) % 14);
+			islands[i] = new IslandData(offsetsX[i] + jitterX, offsetsZ[i] + jitterZ,
+					radiusX, radiusZ, h, central);
 		}
 		return islands;
 	}

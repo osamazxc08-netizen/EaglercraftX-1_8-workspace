@@ -87,6 +87,9 @@ public class ChunkProviderAether implements IChunkProvider {
 			int dx = worldX - bestCenterX;
 			int dz = worldZ - bestCenterZ;
 			boolean corner = (Math.abs(dx) == 3 && Math.abs(dz) == 3);
+			if (dx == 0 && dz == 0) {
+				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.aether_crystal.getDefaultState());
+			}
 			if (corner) {
 				primer.setBlockState(localX, islandTop + 1, localZ, Blocks.stonebrick.getDefaultState());
 				primer.setBlockState(localX, islandTop + 2, localZ, Blocks.stonebrick.getDefaultState());

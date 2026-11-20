@@ -45,7 +45,7 @@ public class WorldProviderAether extends WorldProvider {
 
 	@Override
 	public BlockPos getSpawnCoordinate() {
-		return new BlockPos(0, 90, 0);
+		return new BlockPos(0, 93, 0);
 	}
 
 	@Override

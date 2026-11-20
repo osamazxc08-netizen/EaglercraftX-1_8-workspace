@@ -88,12 +88,13 @@ public class BlockAetherPortal extends BlockPortal {
 
 	@Override
 	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, EaglercraftRandom random) {
-		if (random.nextInt(120) == 0) {
+		if (random.nextInt(240) == 0) {
 			world.playSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D,
 					(double) pos.getZ() + 0.5D, "portal.portal", 0.35F,
 					1.15F + random.nextFloat() * 0.25F, false);
 		}
-		for (int i = 0; i < 2; ++i) {
+		// Keep the gateway's blue shimmer subtle to reduce particle overhead.
+		if (random.nextInt(3) == 0) {
 			double x = (double) pos.getX() + random.nextFloat();
 			double y = (double) pos.getY() + random.nextFloat();
 			double z = (double) pos.getZ() + random.nextFloat();

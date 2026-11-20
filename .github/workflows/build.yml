@@ -5,8 +5,10 @@ on:
   push:
     branches:
       - master
+      - aether-integration
     paths:
       - 'src/**'
+      - 'desktopRuntime/resources/**'
       - 'target_teavm_javascript/**'
       - 'gradle/**'
       - '*.gradle.kts'
@@ -39,6 +41,13 @@ jobs:
 
       - name: Build offline JavaScript client
         run: ./gradlew --no-daemon :target_teavm_javascript:makeMainOfflineDownload
+
+      - name: Verify offline client output
+        run: |
+          test -s target_teavm_javascript/javascript/classes.js
+          test -s target_teavm_javascript/javascript/EaglercraftX_1.8_Offline_en_US.html
+          test -s target_teavm_javascript/javascript/EaglercraftX_1.8_Offline_International.html
+          du -h target_teavm_javascript/javascript/classes.js target_teavm_javascript/javascript/EaglercraftX_1.8_Offline_en_US.html target_teavm_javascript/javascript/EaglercraftX_1.8_Offline_International.html
 
       - name: Upload offline client
         uses: actions/upload-artifact@v4

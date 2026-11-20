@@ -251,6 +251,12 @@ public class BlockDynamicLiquid extends BlockLiquid {
 	}
 
 	public void onBlockAdded(World world, BlockPos blockpos, IBlockState iblockstate) {
+		if (this.blockMaterial == Material.water) {
+			BlockAetherPortal.tryCreatePortal(world, blockpos);
+			if (world.getBlockState(blockpos).getBlock() == Blocks.aether_portal) {
+				return;
+			}
+		}
 		if (!this.checkForMixing(world, blockpos, iblockstate)) {
 			world.scheduleUpdate(blockpos, this, this.tickRate(world));
 		}

@@ -142,6 +142,7 @@ public abstract class Entity implements ICommandSender {
 	public boolean isAirBorne;
 	public int timeUntilPortal;
 	protected boolean inPortal;
+	protected boolean inAetherPortal;
 	protected int portalCounter;
 	public int dimension;
 	protected BlockPos field_181016_an;
@@ -323,13 +324,16 @@ public abstract class Entity implements ICommandSender {
 						this.portalCounter = i;
 						this.timeUntilPortal = this.getPortalCooldown();
 						byte b0;
-						if (this.worldObj.provider.getDimensionId() == -1) {
+						if (this.inAetherPortal) {
+							b0 = (byte) (this.worldObj.provider.getDimensionId() == 2 ? 0 : 2);
+						} else if (this.worldObj.provider.getDimensionId() == -1) {
 							b0 = 0;
 						} else {
 							b0 = -1;
 						}
 
 						this.travelToDimension(b0);
+						this.inAetherPortal = false;
 					}
 
 					this.inPortal = false;
@@ -1698,6 +1702,15 @@ public abstract class Entity implements ICommandSender {
 	}
 
 	public void func_181015_d(BlockPos parBlockPos) {
+		if (this.worldObj.getBlockState(parBlockPos).getBlock() == Blocks.aether_portal) {
+			if (this.timeUntilPortal > 0) {
+				this.timeUntilPortal = this.getPortalCooldown();
+			} else {
+				this.inAetherPortal = true;
+				this.inPortal = true;
+			}
+			return;
+		}
 		if (this.timeUntilPortal > 0) {
 			this.timeUntilPortal = this.getPortalCooldown();
 		} else {

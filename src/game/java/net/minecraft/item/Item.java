@@ -620,6 +620,7 @@ public class Item {
 		registerItemBlock(Blocks.netherrack);
 		registerItemBlock(Blocks.soul_sand);
 		registerItemBlock(Blocks.glowstone);
+		registerItemBlock(Blocks.aether_crystal);
 		registerItemBlock(Blocks.lit_pumpkin);
 		registerItemBlock(Blocks.trapdoor);
 		registerItemBlock(Blocks.monster_egg,

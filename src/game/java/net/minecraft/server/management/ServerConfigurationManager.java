@@ -524,7 +524,17 @@ public abstract class ServerConfigurationManager {
 		double d1 = entityIn.posZ;
 		double d2 = 8.0D;
 		float f = entityIn.rotationYaw;
-		if (entityIn.dimension == -1) {
+		boolean aetherTransfer = parInt1 == 2 || parWorldServer2.provider.getDimensionId() == 2;
+		if (aetherTransfer) {
+			BlockPos spawn = parWorldServer2.provider.getDimensionId() == 2
+					? parWorldServer2.getSpawnCoordinate() : parWorldServer2.getSpawnPoint();
+			d0 = spawn.getX() + 0.5D;
+			d1 = spawn.getZ() + 0.5D;
+			entityIn.setLocationAndAngles(d0, spawn.getY(), d1, f, 0.0F);
+			if (entityIn.isEntityAlive()) {
+				parWorldServer.updateEntityWithOptionalForce(entityIn, false);
+			}
+		} else if (entityIn.dimension == -1) {
 			d0 = MathHelper.clamp_double(d0 / d2, parWorldServer2.getWorldBorder().minX() + 16.0D,
 					parWorldServer2.getWorldBorder().maxX() - 16.0D);
 			d1 = MathHelper.clamp_double(d1 / d2, parWorldServer2.getWorldBorder().minZ() + 16.0D,
@@ -564,7 +574,9 @@ public abstract class ServerConfigurationManager {
 			d1 = (double) MathHelper.clamp_int((int) d1, -29999872, 29999872);
 			if (entityIn.isEntityAlive()) {
 				entityIn.setLocationAndAngles(d0, entityIn.posY, d1, entityIn.rotationYaw, entityIn.rotationPitch);
-				parWorldServer2.getDefaultTeleporter().placeInPortal(entityIn, f);
+				if (!aetherTransfer) {
+					parWorldServer2.getDefaultTeleporter().placeInPortal(entityIn, f);
+				}
 				parWorldServer2.spawnEntityInWorld(entityIn);
 				parWorldServer2.updateEntityWithOptionalForce(entityIn, false);
 			}

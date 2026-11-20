@@ -53,6 +53,7 @@ The following native source changes are now present on `aether-integration`:
 
 ### Build verification
 
+- A new offline build is running for the altar and portal-particle changes; results are pending.
 - Latest offline JavaScript build: GitHub Actions run `44785371957`, commit `44ee0d9a15b0e069c7f0936ac55b52d6c90604ef`, result `completed / success`. It includes the Aether Crystal inventory registration and the fix preventing Endermen from spawning in Aether. Resource repacking was explicitly re-triggered so the custom blockstate/model/item model and English localization are present inside the offline EPK.
 - Previous verified build: GitHub Actions run `44774687307` completed successfully with artifact ID `14648562483`.
 - GitHub Actions run `44774588795` completed successfully for the corrected Aether Crystal Java implementation. The full build including the bundled blockstate and model resources is run `44774687307` for commit `93738189b6ba968e432cca043388fbaf72bc9899`; result: `completed / success`.
@@ -67,6 +68,6 @@ The following native source changes are now present on `aether-integration`:
 
 - Browser gameplay smoke test was attempted with local headless Chromium, but the environment blocked navigation with `ERR_BLOCKED_BY_ADMINISTRATOR`; therefore no in-game behavior is claimed as verified. A successful Gradle/TeaVM build proves compilation and packaging, not that portal activation, chunk generation, rendering, travel, and saving all behave correctly at runtime.
 - The implementation is a native Aether foundation, not a full port of the original Aether mod.
-- Still missing: additional Aether-specific blocks/items, full structures/dungeons, Aether-specific creatures, sound set, and a dedicated blue portal texture/particles. The Aether sky now uses the standard surface celestial renderer with its pale-blue fog; a custom skybox remains future work.
+- Still missing: additional Aether-specific blocks/items, full structures/dungeons, Aether-specific creatures, dedicated Aether sound assets, and a dedicated blue portal texture. The portal now emits cool-toned spell particles and a quieter, higher-pitched portal ambience using existing sounds. The Aether sky now uses the standard surface celestial renderer with its pale-blue fog; a custom skybox remains future work.
 - To return from Aether with the current implementation, build another glowstone-and-water portal in the Aether dimension.
 - Keep PR #1 as Draft until those runtime checks and remaining content are complete.

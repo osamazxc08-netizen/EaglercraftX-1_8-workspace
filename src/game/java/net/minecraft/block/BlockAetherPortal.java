@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 /**
  * A separate glowstone-framed water portal. It deliberately does not use
  * the vanilla obsidian/Nether portal frame or vanilla portal travel logic.
+ * Its ambient effects use a deliberately small particle budget for mobile devices.
  */
 public class BlockAetherPortal extends BlockPortal {
 

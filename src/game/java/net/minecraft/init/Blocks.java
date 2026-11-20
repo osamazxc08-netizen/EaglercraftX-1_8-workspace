@@ -2,6 +2,7 @@ package net.minecraft.init;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
+import net.minecraft.block.BlockAetherPortal;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockCauldron;
@@ -158,6 +159,7 @@ public class Blocks {
 	public static Block soul_sand;
 	public static Block glowstone;
 	public static BlockPortal portal;
+	public static BlockAetherPortal aether_portal;
 	public static Block lit_pumpkin;
 	public static Block cake;
 	public static BlockRedstoneRepeater unpowered_repeater;
@@ -369,6 +371,7 @@ public class Blocks {
 			soul_sand = getRegisteredBlock("soul_sand");
 			glowstone = getRegisteredBlock("glowstone");
 			portal = (BlockPortal) getRegisteredBlock("portal");
+			aether_portal = (BlockAetherPortal) getRegisteredBlock("aether_portal");
 			lit_pumpkin = getRegisteredBlock("lit_pumpkin");
 			cake = getRegisteredBlock("cake");
 			unpowered_repeater = (BlockRedstoneRepeater) getRegisteredBlock("unpowered_repeater");
